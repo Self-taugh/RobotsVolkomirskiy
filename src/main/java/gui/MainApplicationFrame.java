@@ -40,17 +40,21 @@ public class MainApplicationFrame extends JFrame
 
 
         //Настройки окна
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
-
             }
 
             @Override
             public void windowClosing(WindowEvent e) {
-
+                int answer = JOptionPane.showOptionDialog(desktopPane,"Уверены?", "Выход",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                        new Object[]{"Да", "Нет"}, null);
+                if (answer == 0){
+                    System.exit(1);
+                }
             }
 
             @Override

@@ -75,11 +75,7 @@ public class MenuMaker {
 
         JMenuItem closeButton = new JMenuItem("Выключить приложение", KeyEvent.VK_C);
         closeButton.addActionListener((event) -> {
-            int answer = JOptionPane.showConfirmDialog(frame, "Уверены?");
-            if (answer == 0){
-                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-            }
-
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         });
         closingTable.add(closeButton);
         return  closingTable;
