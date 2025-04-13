@@ -25,7 +25,7 @@ public class MainApplicationFrame extends JFrame
         setContentPane(desktopPane);
 
 
-        //Генерация базовых окон
+        //Генерация окон
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
@@ -33,6 +33,9 @@ public class MainApplicationFrame extends JFrame
         gameWindow.setSize(400,  400);
         addWindow(gameWindow);
 
+        HelperWindow helperWindow = new HelperWindow();
+        addWindow(helperWindow);
+        gameWindow.m_visualizer.subscribeToModel(helperWindow);
 
         //Генерация меню
         MenuMaker menuMaker = new MenuMaker(this);

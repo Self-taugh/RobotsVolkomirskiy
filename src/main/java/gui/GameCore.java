@@ -1,17 +1,18 @@
 package gui;
 
+import Structures.ForHelper;
+
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javax.swing.JPanel;
 
-public class GameCore extends JPanel
+public class GameCore extends Observable
 {
     private final Timer m_timer = initTimer();
     
@@ -21,26 +22,27 @@ public class GameCore extends JPanel
         return timer;
     }
     
-    private volatile double m_robotPositionX = 100;
-    private volatile double m_robotPositionY = 100; 
-    private volatile double m_robotDirection = 0; 
+    protected volatile double m_robotPositionX = 100;
+    protected volatile double m_robotPositionY = 100;
+    protected volatile double m_robotDirection = 0;
 
-    private volatile int m_targetPositionX = 150;
-    private volatile int m_targetPositionY = 100;
+    protected volatile int m_targetPositionX = 150;
+    protected volatile int m_targetPositionY = 100;
     
     private static final double maxVelocity = 0.1; 
-    private static final double maxAngularVelocity = 0.001; 
+    private static final double maxAngularVelocity = 0.001;
 
-    private GameGraphics visualizer;
+    private static List<Observer> observers = new ArrayList<Observer>();
+
+
     public GameCore()
     {
-        visualizer = new GameGraphics();
         m_timer.schedule(new TimerTask()
         {
             @Override
             public void run()
             {
-                onRedrawEvent();
+                updateListeners(new ForHelper(m_robotPositionX, m_robotPositionY));
             }
         }, 0, 50);
         m_timer.schedule(new TimerTask()
@@ -51,16 +53,14 @@ public class GameCore extends JPanel
                 onModelUpdateEvent();
             }
         }, 0, 10);
-        addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                setTargetPosition(e.getPoint());
-                repaint();
-            }
-        });
-        setDoubleBuffered(true);
+    }
+
+    public void Subscribe(Observer obs){
+        observers.add(obs);
+    }
+
+    public double[] GetCords(){
+        return new double[] {m_robotPositionX, m_robotPositionY};
     }
 
     protected void setTargetPosition(Point p)
@@ -68,10 +68,11 @@ public class GameCore extends JPanel
         m_targetPositionX = p.x;
         m_targetPositionY = p.y;
     }
-    
-    protected void onRedrawEvent()
-    {
-        EventQueue.invokeLater(this::repaint);
+
+    private void updateListeners(Object arg){
+        for (Observer obs : observers){
+            obs.update(this, arg);
+        }
     }
 
     private static double distance(double x1, double y1, double x2, double y2)
@@ -162,14 +163,4 @@ public class GameCore extends JPanel
     {
         return (int)(value + 0.5);
     }
-
-    @Override
-    public void paint(Graphics g)
-    {
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D)g;
-        double[] Cords = {m_robotPositionX, m_robotPositionY, m_robotDirection, m_targetPositionX, m_robotPositionY};
-        visualizer.paint(g2d, Cords);
-    }
-
 }
