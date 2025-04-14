@@ -48,6 +48,7 @@ public class MainApplicationFrame extends JFrame
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
+                Loader.Load(desktopPane);
             }
 
             @Override
@@ -56,6 +57,7 @@ public class MainApplicationFrame extends JFrame
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
                         new Object[]{"Да", "Нет"}, null);
                 if (answer == 0){
+                    Loader.Save(desktopPane);
                     System.exit(1);
                 }
             }
