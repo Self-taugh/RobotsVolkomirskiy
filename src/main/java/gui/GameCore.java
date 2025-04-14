@@ -52,7 +52,7 @@ public class GameCore extends Observable
             {
                 onModelUpdateEvent();
             }
-        }, 0, 10);
+        }, 0, 1);
     }
 
     public void Subscribe(Observer obs){
@@ -100,14 +100,22 @@ public class GameCore extends Observable
         }
         double velocity = maxVelocity;
         double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
+        angleToTarget -= m_robotDirection;
+        angleToTarget = angleToTarget  * 180 / Math.PI;
+        if (Math.abs(angleToTarget) > 180){
+            angleToTarget -= 360;
+        }
         double angularVelocity = 0;
-        if (angleToTarget > m_robotDirection)
+        if (angleToTarget > 0)
         {
             angularVelocity = maxAngularVelocity;
         }
-        if (angleToTarget < m_robotDirection)
+        if (angleToTarget < 0)
         {
             angularVelocity = -maxAngularVelocity;
+        }
+        if (Math.abs(angleToTarget) > 90){
+            angularVelocity = maxAngularVelocity;
         }
         
         moveRobot(velocity, angularVelocity, 10);
