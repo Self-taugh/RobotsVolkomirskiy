@@ -1,16 +1,9 @@
 package gui;
 
-import Structures.ForHelper;
+import Structures.ForArgs;
 
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.*;
-
-import javax.swing.JPanel;
 
 public class GameCore extends Observable
 {
@@ -42,7 +35,8 @@ public class GameCore extends Observable
             @Override
             public void run()
             {
-                updateListeners(new ForHelper(m_robotPositionX, m_robotPositionY));
+                updateListeners(new ForArgs(m_robotPositionX, m_robotPositionY, m_robotDirection,
+                        m_targetPositionX, m_targetPositionY));
             }
         }, 0, 50);
         m_timer.schedule(new TimerTask()

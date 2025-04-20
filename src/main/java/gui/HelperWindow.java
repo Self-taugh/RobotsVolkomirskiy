@@ -1,14 +1,14 @@
 package gui;
 
-import Structures.ForHelper;
+import Structures.ForArgs;
+import Structures.Serializing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HelperWindow extends JInternalFrame implements Observer {
+public class HelperWindow extends JInternalFrame implements Observer, Serializing {
 
     private JLabel lab;
     public HelperWindow(){
@@ -24,7 +24,7 @@ public class HelperWindow extends JInternalFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        ForHelper data = (ForHelper)(arg);
+        ForArgs data = (ForArgs)(arg);
         String x = Double.toString(data.x);
         String y = Double.toString(data.y);
         if (x.length() > 6){
@@ -35,5 +35,26 @@ public class HelperWindow extends JInternalFrame implements Observer {
         }
         lab.setText(x + "     " + y);
         repaint();
+    }
+
+    @Override
+    public String Serialize() {
+        Rectangle bounds = getNormalBounds();
+        String line = getTitle()+"/";
+        line = line + Integer.toString(bounds.x) + "-" + Integer.toString(bounds.y) + "-" +
+                Integer.toString(bounds.height) + "-" + Integer.toString(bounds.width) + "\n";
+        return line;
+    }
+
+    @Override
+    public void Deserializing(String line) {
+        String title;
+        int x,y,height,width;
+        title = line.split("/")[0];
+        x = Integer.parseInt(line.split("/")[1].split("-")[0]);
+        y = Integer.parseInt(line.split("/")[1].split("-")[1]);
+        height = Integer.parseInt(line.split("/")[1].split("-")[2]);
+        width = Integer.parseInt(line.split("/")[1].split("-")[3]);
+        setBounds(x,y,width,height);
     }
 }

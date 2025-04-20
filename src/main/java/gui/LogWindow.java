@@ -1,17 +1,16 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.TextArea;
+import java.awt.*;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
+import Structures.Serializing;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener
+public class LogWindow extends JInternalFrame implements LogChangeListener, Serializing
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
@@ -46,5 +45,26 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
     public void onLogChanged()
     {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    @Override
+    public String Serialize() {
+        Rectangle bounds = getNormalBounds();
+        String line = getTitle()+"/";
+        line = line + Integer.toString(bounds.x) + "-" + Integer.toString(bounds.y) + "-" +
+                Integer.toString(bounds.height) + "-" + Integer.toString(bounds.width) + "\n";
+        return line;
+    }
+
+    @Override
+    public void Deserializing(String line) {
+        String title;
+        int x,y,height,width;
+        title = line.split("/")[0];
+        x = Integer.parseInt(line.split("/")[1].split("-")[0]);
+        y = Integer.parseInt(line.split("/")[1].split("-")[1]);
+        height = Integer.parseInt(line.split("/")[1].split("-")[2]);
+        width = Integer.parseInt(line.split("/")[1].split("-")[3]);
+        setBounds(x,y,width,height);
     }
 }

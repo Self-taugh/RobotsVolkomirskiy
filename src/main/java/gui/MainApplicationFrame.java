@@ -35,7 +35,7 @@ public class MainApplicationFrame extends JFrame
 
         HelperWindow helperWindow = new HelperWindow();
         addWindow(helperWindow);
-        gameWindow.m_visualizer.subscribeToModel(helperWindow);
+        gameWindow.model.Subscribe(helperWindow);
 
         //Генерация меню
         MenuMaker menuMaker = new MenuMaker(this);

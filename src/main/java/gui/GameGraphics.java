@@ -1,5 +1,7 @@
 package gui;
 
+import Structures.ForArgs;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -10,12 +12,8 @@ import java.util.Observer;
 
 public class GameGraphics extends JPanel implements Observer {
 
-    private final GameCore model;
-
-    public GameGraphics(){
-        model = new GameCore();
+    public GameGraphics(GameCore model){
         model.Subscribe(this);
-
         addMouseListener(new MouseAdapter()
         {
             @Override
@@ -30,11 +28,8 @@ public class GameGraphics extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        args = (ForArgs)(arg);
         repaint();
-    }
-
-    public void subscribeToModel(Observer obs){
-        model.Subscribe(obs);
     }
 
     private static int round(double value)
@@ -80,17 +75,22 @@ public class GameGraphics extends JPanel implements Observer {
     }
 
 
-
+    private ForArgs args;
     // Cords[0] - m_robotPositionX    Cords[1] - m_robotPositionY
     // Cords[2] - m_robotDirection   Cords[3] - m_targetPositionX   Cords[4] - m_targetPositionY
     @Override
     public void paint(Graphics g)
     {
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D)g;
-        double[] Cord2 = {model.m_robotPositionX, model.m_robotPositionY, model.m_robotDirection};
-        drawRobot(g2d,  Cord2);
-        drawTarget(g2d, (int)(model.m_targetPositionX), (int)(model.m_targetPositionY));
+        try {
+            super.paint(g);
+            Graphics2D g2d = (Graphics2D)g;
+            double[] Cord2 = {args.x, args.y, args.dir};
+            drawRobot(g2d,  Cord2);
+            drawTarget(g2d, args.tarx, args.tary);
+        } catch (Exception e) {
+
+        }
+
     }
 }
 
