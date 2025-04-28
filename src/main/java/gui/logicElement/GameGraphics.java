@@ -1,4 +1,4 @@
-package gui;
+package gui.logicElement;
 
 import Structures.ForArgs;
 
@@ -9,8 +9,18 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameGraphics extends JPanel implements Observer {
+
+    private final java.util.Timer m_timer = initTimer();
+
+    private static java.util.Timer initTimer()
+    {
+        java.util.Timer timer = new Timer("events generator", true);
+        return timer;
+    }
 
     public GameGraphics(GameCore model){
         model.Subscribe(this);
@@ -23,13 +33,22 @@ public class GameGraphics extends JPanel implements Observer {
                 repaint();
             }
         });
+
+        m_timer.schedule(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                repaint();
+            }
+        }, 0, 50);
+
         setDoubleBuffered(true);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         args = (ForArgs)(arg);
-        repaint();
     }
 
     private static int round(double value)

@@ -1,13 +1,14 @@
-package gui;
+package gui.windows;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
+import gui.logicElement.MenuMaker;
+import gui.logicElement.Loader;
 import log.Logger;
 
 public class MainApplicationFrame extends JFrame

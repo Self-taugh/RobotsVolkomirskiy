@@ -1,4 +1,4 @@
-package gui;
+package gui.logicElement;
 
 import Structures.ForArgs;
 
@@ -35,18 +35,9 @@ public class GameCore extends Observable
             @Override
             public void run()
             {
-                updateListeners(new ForArgs(m_robotPositionX, m_robotPositionY, m_robotDirection,
-                        m_targetPositionX, m_targetPositionY));
-            }
-        }, 0, 50);
-        m_timer.schedule(new TimerTask()
-        {
-            @Override
-            public void run()
-            {
                 onModelUpdateEvent();
             }
-        }, 0, 1);
+        }, 0, 10);
     }
 
     public void Subscribe(Observer obs){
@@ -57,7 +48,7 @@ public class GameCore extends Observable
         return new double[] {m_robotPositionX, m_robotPositionY};
     }
 
-    protected void setTargetPosition(Point p)
+    public void setTargetPosition(Point p)
     {
         m_targetPositionX = p.x;
         m_targetPositionY = p.y;
@@ -111,7 +102,10 @@ public class GameCore extends Observable
         if (Math.abs(angleToTarget) > 90){
             angularVelocity = maxAngularVelocity;
         }
-        
+
+        updateListeners(new ForArgs(m_robotPositionX, m_robotPositionY, m_robotDirection,
+                m_targetPositionX, m_targetPositionY));
+
         moveRobot(velocity, angularVelocity, 10);
     }
     

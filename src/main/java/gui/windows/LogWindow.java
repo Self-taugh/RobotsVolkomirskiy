@@ -1,23 +1,22 @@
-package gui;
+package gui.windows;
 
 import java.awt.*;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
-import Structures.Serializing;
+import Structures.MyWindow;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener, Serializing
+public class LogWindow extends MyWindow implements LogChangeListener
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
 
     public LogWindow(LogWindowSource logSource) 
     {
-        super("Протокол работы", true, true, true, true);
+        super("Протокол работы", true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
@@ -47,6 +46,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Seri
         EventQueue.invokeLater(this::updateLogContent);
     }
 
+    /*
     @Override
     public String Serialize() {
         Rectangle bounds = getNormalBounds();
@@ -66,5 +66,5 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Seri
         height = Integer.parseInt(line.split("/")[1].split("-")[2]);
         width = Integer.parseInt(line.split("/")[1].split("-")[3]);
         setBounds(x,y,width,height);
-    }
+    }*/
 }

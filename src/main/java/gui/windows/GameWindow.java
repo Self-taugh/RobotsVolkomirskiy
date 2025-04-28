@@ -1,43 +1,29 @@
-package gui;
+package gui.windows;
 
-import Structures.ForArgs;
-import Structures.Serializing;
+import Structures.MyWindow;
+import gui.logicElement.GameCore;
+import gui.logicElement.GameGraphics;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.Observable;
-import java.util.Observer;
 
-public class HelperWindow extends JInternalFrame implements Observer, Serializing {
+import javax.swing.JPanel;
 
-    private JLabel lab;
-    public HelperWindow(){
-        super("Окно помощи", false, true);
-        setSize(150,50);
-
+public class GameWindow extends MyWindow
+{
+    public final GameGraphics m_visualizer;
+    public final GameCore model;
+    public GameWindow()
+    {
+        super("Игровое поле", true, true, true);
+        model = new GameCore();
+        m_visualizer = new GameGraphics(model);
         JPanel panel = new JPanel(new BorderLayout());
-        lab = new JLabel("TEST");
-        panel.add(lab);
+        panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
+        //pack();*/
     }
 
-
-    @Override
-    public void update(Observable o, Object arg) {
-        ForArgs data = (ForArgs)(arg);
-        String x = Double.toString(data.x);
-        String y = Double.toString(data.y);
-        if (x.length() > 6){
-            x = x.substring(0,6);
-        }
-        if (y.length() > 6){
-            y = y.substring(0,6);
-        }
-        lab.setText(x + "     " + y);
-        repaint();
-    }
-
-    @Override
+    /*@Override
     public String Serialize() {
         Rectangle bounds = getNormalBounds();
         String line = getTitle()+"/";
@@ -56,5 +42,5 @@ public class HelperWindow extends JInternalFrame implements Observer, Serializin
         height = Integer.parseInt(line.split("/")[1].split("-")[2]);
         width = Integer.parseInt(line.split("/")[1].split("-")[3]);
         setBounds(x,y,width,height);
-    }
+    }*/
 }
