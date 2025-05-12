@@ -24,6 +24,8 @@ public class GameCore extends Observable
     
     private static final double maxVelocity = 0.1; 
     private static final double maxAngularVelocity = 0.001;
+    private static final int duration = 10;
+    private static double maxRotationRadius;
 
     private static List<Observer> observers = new ArrayList<Observer>();
 
@@ -38,6 +40,20 @@ public class GameCore extends Observable
                 onModelUpdateEvent();
             }
         }, 0, 10);
+
+        FindOutRadius();
+    }
+
+    public void FindOutRadius(){
+        double startAngle = Math.PI/2;
+        double xDistanceDelta = 0;
+        while (startAngle > 0){
+            xDistanceDelta = xDistanceDelta + maxVelocity / maxAngularVelocity *
+                    (Math.sin(startAngle  + maxAngularVelocity * duration) -
+                            Math.sin(startAngle));
+            startAngle -= maxAngularVelocity * duration;
+        }
+        maxRotationRadius = xDistanceDelta;
     }
 
     public void Subscribe(Observer obs){
@@ -103,10 +119,36 @@ public class GameCore extends Observable
             angularVelocity = maxAngularVelocity;
         }
 
+        // Определение невозможного цикла
+        double newX = m_robotPositionX + velocity / angularVelocity *
+                (Math.sin(m_robotDirection  + angularVelocity * duration) -
+                        Math.sin(m_robotDirection));
+        double newY = m_robotPositionY - velocity / angularVelocity *
+                (Math.cos(m_robotDirection  + angularVelocity * duration) -
+                        Math.cos(m_robotDirection));
+
+        double nowX = m_robotPositionX; double nowY = m_robotPositionY;
+
+        double newX2 = newX + velocity / angularVelocity *
+                (Math.sin(m_robotDirection  + angularVelocity * duration * 2) -
+                        Math.sin(m_robotDirection + angularVelocity * duration));
+        double newY2 = newY - velocity / angularVelocity *
+                (Math.cos(m_robotDirection  + angularVelocity * duration) -
+                        Math.cos(m_robotDirection));
+
+        Structures.Point centre = CircleCenterFinder.findCircleCenters(
+                new Structures.Point(nowX, nowY),
+                new Structures.Point(newX, newY),
+                new Structures.Point(newX2, newY2), maxRotationRadius);
+
+        if ((Math.pow(m_targetPositionX - centre.x, 2) + Math.pow(m_targetPositionY - centre.y, 2)) <= Math.pow(maxRotationRadius, 2)){
+            angularVelocity = 0;
+        }
+
         updateListeners(new ForArgs(m_robotPositionX, m_robotPositionY, m_robotDirection,
                 m_targetPositionX, m_targetPositionY));
 
-        moveRobot(velocity, angularVelocity, 10);
+        moveRobot(velocity, angularVelocity, duration);
     }
     
     private static double applyLimits(double value, double min, double max)

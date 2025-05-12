@@ -10,6 +10,7 @@ public abstract class MyWindow extends JInternalFrame{
     public MyWindow(String title, boolean r, boolean c, boolean m){
         super(title,r,c,m);
     }
+
     public String Serialize(){
         GSONSubclas g = new GSONSubclas(getNormalBounds(),getTitle());
         Gson gson = new Gson();
